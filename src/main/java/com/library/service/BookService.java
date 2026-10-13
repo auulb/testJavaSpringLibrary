@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * 图书业务逻辑：增删改查 + 借阅/归还。
+ * 图书业务逻辑：增删改查。
  */
 @Service
 public class BookService {
@@ -60,22 +60,6 @@ public class BookService {
     public void delete(Long id) {
         if (!bookRepository.deleteById(id)) {
             throw new NotFoundException("图书不存在（id=" + id + "）");
-        }
-    }
-
-    /** 借出一本，可借册数减 1。 */
-    public void borrow(Long id) {
-        get(id);
-        if (!bookRepository.adjustAvailable(id, -1)) {
-            throw new BusinessException("该图书已全部借出，暂无可借副本");
-        }
-    }
-
-    /** 归还一本，可借册数加 1。 */
-    public void giveBack(Long id) {
-        get(id);
-        if (!bookRepository.adjustAvailable(id, 1)) {
-            throw new BusinessException("归还失败：可借册数已达总册数");
         }
     }
 

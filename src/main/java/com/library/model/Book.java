@@ -21,10 +21,7 @@ public class Book {
     @Size(max = 120, message = "作者不能超过 120 个字符")
     private String author;
 
-    /**
-     * ISBN 选填：豆瓣图书等来源的书目不一定带 ISBN，留空时不影响保存与搜索。
-     * 非空时仍参与唯一性校验。
-     */
+    @NotBlank(message = "ISBN 不能为空")
     @Size(max = 32, message = "ISBN 不能超过 32 个字符")
     private String isbn;
 

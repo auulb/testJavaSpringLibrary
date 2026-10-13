@@ -7,7 +7,7 @@
 <main class="container">
     <div class="page-header">
         <h1>图书列表</h1>
-        <a class="btn btn-primary" th:if="${currentUser.admin}" th:href="@{/books/new}">+ 新增图书</a>
+        <a class="btn btn-primary" th:href="@{/books/new}">+ 新增图书</a>
     </div>
 
     <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
@@ -43,7 +43,7 @@
                 <td th:text="${book.id}">1</td>
                 <td th:text="${book.title}">书名</td>
                 <td th:text="${book.author}">作者</td>
-                <td th:text="${#strings.isEmpty(book.isbn) ? '—' : book.isbn}">ISBN</td>
+                <td th:text="${book.isbn}">ISBN</td>
                 <td th:text="${book.category}">分类</td>
                 <td class="num" th:text="${book.totalCopies}">0</td>
                 <td class="num">
@@ -53,18 +53,9 @@
                 </td>
                 <td class="num" th:text="${book.borrowedCopies}">0</td>
                 <td class="actions">
-                    <form th:if="${book.availableCopies != null and book.availableCopies > 0}"
-                          th:action="@{/books/{id}/borrow(id=${book.id})}" method="post">
-                        <button class="btn btn-small" type="submit">借阅</button>
-                    </form>
-                    <form th:if="${book.borrowedCopies > 0}"
-                          th:action="@{/books/{id}/return(id=${book.id})}" method="post">
-                        <button class="btn btn-small btn-ghost" type="submit">归还</button>
-                    </form>
-                    <a class="btn btn-small btn-ghost" th:if="${currentUser.admin}"
+                    <a class="btn btn-small btn-ghost"
                        th:href="@{/books/{id}/edit(id=${book.id})}">编辑</a>
-                    <form th:if="${currentUser.admin}"
-                          th:action="@{/books/{id}/delete(id=${book.id})}" method="post"
+                    <form th:action="@{/books/{id}/delete(id=${book.id})}" method="post"
                           onsubmit="return confirm('确定删除这本书吗？此操作不可撤销。');">
                         <button class="btn btn-small btn-danger" type="submit">删除</button>
                     </form>

@@ -62,30 +62,6 @@ public class BookRepository extends JsonFileStore<Book> {
         });
     }
 
-    /**
-     * 原子地把可借册数增减 {@code delta}（借出为负、归还为正）。
-     * 若结果越界（小于 0 或超过总册数）或图书不存在则不做改动并返回 false。
-     */
-    public boolean adjustAvailable(Long id, int delta) {
-        if (id == null) {
-            return false;
-        }
-        return update(items -> items.stream()
-                .filter(book -> id.equals(book.getId()))
-                .findFirst()
-                .map(book -> {
-                    int total = book.getTotalCopies() == null ? 0 : book.getTotalCopies();
-                    int current = book.getAvailableCopies() == null ? 0 : book.getAvailableCopies();
-                    int next = current + delta;
-                    if (next < 0 || next > total) {
-                        return false;
-                    }
-                    book.setAvailableCopies(next);
-                    return true;
-                })
-                .orElse(false));
-    }
-
     public boolean deleteById(Long id) {
         return update(items -> items.removeIf(book -> id != null && id.equals(book.getId())));
     }

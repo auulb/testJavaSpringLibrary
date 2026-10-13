@@ -30,8 +30,8 @@
                 <small class="field-error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></small>
             </label>
             <label>
-                <span>ISBN（选填）</span>
-                <input type="text" th:field="*{isbn}" placeholder="可留空">
+                <span>ISBN *</span>
+                <input type="text" th:field="*{isbn}">
                 <small class="field-error" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></small>
             </label>
         </div>

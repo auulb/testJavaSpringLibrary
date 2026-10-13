@@ -4,7 +4,6 @@ import com.library.model.Book;
 import com.library.service.BookService;
 import com.library.service.BusinessException;
 import jakarta.validation.Valid;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * 图书管理：列表、搜索、增删改查，以及借阅/归还。
+ * 图书管理：列表、搜索、增删改查。
  */
 @Controller
 @RequestMapping("/books")
@@ -37,7 +36,6 @@ public class BookController {
     }
 
     @GetMapping("/new")
-    @PreAuthorize("hasRole('ADMIN')")
     public String createForm(Model model) {
         Book book = new Book();
         book.setTotalCopies(1);
@@ -48,7 +46,6 @@ public class BookController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public String create(@Valid @ModelAttribute("book") Book book,
                          BindingResult binding,
                          Model model,
@@ -69,7 +66,6 @@ public class BookController {
     }
 
     @GetMapping("/{id}/edit")
-    @PreAuthorize("hasRole('ADMIN')")
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("book", bookService.get(id));
         model.addAttribute("editing", true);
@@ -77,7 +73,6 @@ public class BookController {
     }
 
     @PostMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public String update(@PathVariable Long id,
                          @Valid @ModelAttribute("book") Book book,
                          BindingResult binding,
@@ -99,32 +94,9 @@ public class BookController {
     }
 
     @PostMapping("/{id}/delete")
-    @PreAuthorize("hasRole('ADMIN')")
     public String delete(@PathVariable Long id, RedirectAttributes redirect) {
         bookService.delete(id);
         redirect.addFlashAttribute("message", "已删除该图书");
-        return "redirect:/books";
-    }
-
-    @PostMapping("/{id}/borrow")
-    public String borrow(@PathVariable Long id, RedirectAttributes redirect) {
-        try {
-            bookService.borrow(id);
-            redirect.addFlashAttribute("message", "借阅成功");
-        } catch (BusinessException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-        }
-        return "redirect:/books";
-    }
-
-    @PostMapping("/{id}/return")
-    public String giveBack(@PathVariable Long id, RedirectAttributes redirect) {
-        try {
-            bookService.giveBack(id);
-            redirect.addFlashAttribute("message", "归还成功");
-        } catch (BusinessException e) {
-            redirect.addFlashAttribute("error", e.getMessage());
-        }
         return "redirect:/books";
     }
 
