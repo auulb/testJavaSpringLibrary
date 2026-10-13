@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(pageTitle)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle} + ' · 图书馆管理系统'">图书馆管理系统</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<nav class="navbar" th:fragment="navbar">
+    <div class="navbar-inner">
+        <a class="brand" th:href="@{/}">📚 图书馆管理系统</a>
+
+        <div class="nav-links" th:if="${currentUser != null}">
+            <a th:href="@{/}">首页</a>
+            <a th:href="@{/books}">图书</a>
+            <a th:if="${currentUser.admin}" th:href="@{/users}">用户管理</a>
+        </div>
+
+        <div class="nav-user" th:if="${currentUser != null}">
+            <span class="tag" th:text="${currentUser.roleLabel}">角色</span>
+            <span class="nav-name" th:text="${currentUser.fullName}">姓名</span>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="link-btn">退出</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>

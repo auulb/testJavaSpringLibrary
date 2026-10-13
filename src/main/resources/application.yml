@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: library-management
+  thymeleaf:
+    # 开发阶段关闭模板缓存，改完 HTML 刷新即可见
+    cache: false
+  jackson:
+    deserialization:
+      # 数据文件里出现模型中没有的字段时忽略即可，避免旧数据/字段改名导致启动失败
+      fail-on-unknown-properties: false
+
+library:
+  # JSON 数据文件存放目录（相对应用启动目录）
+  data-dir: data

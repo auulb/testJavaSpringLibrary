@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('首页')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container">
+    <div class="page-header">
+        <h1>
+            你好，<span th:text="${currentUser.fullName}">用户</span> 👋
+        </h1>
+        <span class="tag" th:text="${currentUser.roleLabel}">角色</span>
+    </div>
+
+    <div class="stat-grid">
+        <div class="stat-card">
+            <span class="stat-value" th:text="${bookTitles}">0</span>
+            <span class="stat-label">图书种类</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" th:text="${totalCopies}">0</span>
+            <span class="stat-label">总册数</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" th:text="${availableCopies}">0</span>
+            <span class="stat-label">可借册数</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" th:text="${borrowedCopies}">0</span>
+            <span class="stat-label">已借出</span>
+        </div>
+        <div class="stat-card" th:if="${userCount != null}">
+            <span class="stat-value" th:text="${userCount}">0</span>
+            <span class="stat-label">系统用户</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>可以做什么</h2>
+        <ul class="action-list">
+            <li><a th:href="@{/books}">浏览图书目录，借阅或归还</a></li>
+            <li th:if="${currentUser.admin}"><a th:href="@{/books/new}">新增一本图书</a></li>
+            <li th:if="${currentUser.admin}"><a th:href="@{/users}">管理用户（新增 / 编辑 / 删除）</a></li>
+        </ul>
+        <p class="muted" th:unless="${currentUser.admin}">
+            你是读者，可以浏览和借阅图书；图书与用户的增删改由管理员完成。
+        </p>
+    </div>
+</main>
+
+</body>
+</html>

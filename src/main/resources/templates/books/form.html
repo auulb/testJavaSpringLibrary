@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('图书编辑')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container narrow">
+    <div class="page-header">
+        <h1 th:text="${editing} ? '编辑图书' : '新增图书'">图书</h1>
+        <a class="btn btn-ghost" th:href="@{/books}">返回列表</a>
+    </div>
+
+    <form class="card form" method="post" th:object="${book}"
+          th:action="${editing} ? @{/books/{id}(id=${book.id})} : @{/books}">
+
+        <div class="alert alert-error" th:if="${#fields.hasGlobalErrors()}">
+            <div th:each="err : ${#fields.globalErrors()}" th:text="${err}">错误</div>
+        </div>
+
+        <label>
+            <span>书名 *</span>
+            <input type="text" th:field="*{title}" autofocus>
+            <small class="field-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></small>
+        </label>
+
+        <div class="form-row">
+            <label>
+                <span>作者 *</span>
+                <input type="text" th:field="*{author}">
+                <small class="field-error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></small>
+            </label>
+            <label>
+                <span>ISBN（选填）</span>
+                <input type="text" th:field="*{isbn}" placeholder="可留空">
+                <small class="field-error" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></small>
+            </label>
+        </div>
+
+        <label>
+            <span>分类</span>
+            <input type="text" th:field="*{category}" placeholder="如：计算机 / 文学 / 历史">
+            <small class="field-error" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></small>
+        </label>
+
+        <div class="form-row">
+            <label>
+                <span>总册数 *</span>
+                <input type="number" min="1" th:field="*{totalCopies}">
+                <small class="field-error" th:if="${#fields.hasErrors('totalCopies')}" th:errors="*{totalCopies}"></small>
+            </label>
+            <label>
+                <span>可借册数 *</span>
+                <input type="number" min="0" th:field="*{availableCopies}">
+                <small class="field-error" th:if="${#fields.hasErrors('availableCopies')}" th:errors="*{availableCopies}"></small>
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">保存</button>
+            <a class="btn btn-ghost" th:href="@{/books}">取消</a>
+        </div>
+    </form>
+</main>
+
+</body>
+</html>

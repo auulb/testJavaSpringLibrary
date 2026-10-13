@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('图书列表')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container">
+    <div class="page-header">
+        <h1>图书列表</h1>
+        <a class="btn btn-primary" th:if="${currentUser.admin}" th:href="@{/books/new}">+ 新增图书</a>
+    </div>
+
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+    <div class="alert alert-error" th:if="${error}" th:text="${error}"></div>
+
+    <form class="search-bar" method="get" th:action="@{/books}">
+        <input type="text" name="keyword" th:value="${keyword}"
+               placeholder="搜索书名 / 作者 / ISBN / 分类">
+        <button class="btn" type="submit">搜索</button>
+        <a class="btn btn-ghost" th:if="${keyword != null and !keyword.isBlank()}" th:href="@{/books}">清除</a>
+    </form>
+
+    <div class="table-wrap">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>书名</th>
+                <th>作者</th>
+                <th>ISBN</th>
+                <th>分类</th>
+                <th class="num">总册数</th>
+                <th class="num">可借</th>
+                <th class="num">已借出</th>
+                <th class="actions-col">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${books.isEmpty()}">
+                <td colspan="9" class="empty">没有匹配的图书</td>
+            </tr>
+            <tr th:each="book : ${books}">
+                <td th:text="${book.id}">1</td>
+                <td th:text="${book.title}">书名</td>
+                <td th:text="${book.author}">作者</td>
+                <td th:text="${#strings.isEmpty(book.isbn) ? '—' : book.isbn}">ISBN</td>
+                <td th:text="${book.category}">分类</td>
+                <td class="num" th:text="${book.totalCopies}">0</td>
+                <td class="num">
+                    <span class="pill"
+                          th:classappend="${book.availableCopies != null and book.availableCopies > 0} ? 'pill-ok' : 'pill-out'"
+                          th:text="${book.availableCopies}">0</span>
+                </td>
+                <td class="num" th:text="${book.borrowedCopies}">0</td>
+                <td class="actions">
+                    <form th:if="${book.availableCopies != null and book.availableCopies > 0}"
+                          th:action="@{/books/{id}/borrow(id=${book.id})}" method="post">
+                        <button class="btn btn-small" type="submit">借阅</button>
+                    </form>
+                    <form th:if="${book.borrowedCopies > 0}"
+                          th:action="@{/books/{id}/return(id=${book.id})}" method="post">
+                        <button class="btn btn-small btn-ghost" type="submit">归还</button>
+                    </form>
+                    <a class="btn btn-small btn-ghost" th:if="${currentUser.admin}"
+                       th:href="@{/books/{id}/edit(id=${book.id})}">编辑</a>
+                    <form th:if="${currentUser.admin}"
+                          th:action="@{/books/{id}/delete(id=${book.id})}" method="post"
+                          onsubmit="return confirm('确定删除这本书吗？此操作不可撤销。');">
+                        <button class="btn btn-small btn-danger" type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+</body>
+</html>
